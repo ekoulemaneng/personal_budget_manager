@@ -1,0 +1,30 @@
+{
+  "name": "personal_budget_manager",
+  "version": "1.0.0",
+  "description": "A back-end app to manage personal budget",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch index.js",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "nodejs",
+    "expressjs",
+    "rest",
+    "api",
+    "back-end"
+  ],
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "cors": "^2.8.5",
+    "errorhandler": "^1.5.1",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "lowdb": "^7.0.1",
+    "morgan": "^1.10.0"
+  },
+  "repository": "",
+  "author": "Ekoulé Maneng Charly Karl",
+  "license": "ISC"
+}
