@@ -30,5 +30,11 @@ app.use('/', indexRouter);
 import errorHandler from 'errorhandler';
 app.use(errorHandler());
 
+// Handle server error
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: err.stack });
+})
+
 // Export the app
 export default app;
