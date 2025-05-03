@@ -2,12 +2,6 @@
 import express from 'express';
 const app = express();
 
-// Launch the database
-/*
-import { launchDB } from './db.js';
-await launchDB();
-*/
-
 // Import morgan module for logging HTTP requests and responses and use it for all routes
 import morgan from 'morgan';
 app.use(morgan('dev'));
@@ -28,7 +22,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // Import swagger UI and set up the documentation
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './openapi.json' assert { type: 'json' };
+// Import readFile from fs/promises
+import { readFile } from 'fs/promises';
+// Import the OpenAPI JSON file and build the documentation
+const swaggerDocument = JSON.parse(await readFile(new URL('./openapi.json', import.meta.url)));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Import routes and use them as middleware

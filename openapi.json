@@ -11,6 +11,10 @@
     },
     "servers": [
         {
+            "url": "https://personal-budget-manager-0l89.onrender.com/api",
+            "description": "Production Environment"
+        },
+        {
             "url": "http://127.0.0.1:3000/api",
             "description": "Development Environment"
         }
