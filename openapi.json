@@ -1,0 +1,552 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Budget Manager API",
+        "version": "1.0.0",
+        "description": "An REST API to interract with a back-end of an budget manager application",
+        "contact": {
+            "email": "ekoulemaneng@gmail.com",
+            "name": "ekoulemaneng"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:3000/api",
+            "description": "Development Environment"
+        }
+    ],
+    "paths": {
+        "/envelopes/": {
+            "post": {
+                "summary": "Add a new envelope",
+                "description": "",
+                "operationId": "add-envelope",
+                "tags": [
+                    "Envelopes"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "$ref": "#/components/schemas/Title"
+                                    },
+                                    "amount": {
+                                        "$ref": "#/components/schemas/Amount"
+                                    }
+                                },
+                                "required": [
+                                    "title",
+                                    "amount"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Got the envelope successfully added",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Envelope"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request because of invalid data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get all envelopes",
+                "description": "",
+                "operationId": "get-envelopes",
+                "tags": [
+                    "Envelopes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Got the envelopes successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Envelope"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/envelopes/{id}": {
+            "get": {
+                "summary": "Retrieve an envelope by ID",
+                "description": "",
+                "operationId": "get-envelope",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "tags": [
+                    "Envelopes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Got the envelope successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Envelope"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request because of invalid data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Envelope not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete an envelope by ID",
+                "description": "",
+                "operationId": "delete-envelope",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "tags": [
+                    "Envelopes"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Got the envelope successfully deleted",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "Envelope not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/envelopes/{id}/title": {
+            "post": {
+                "summary": "Update an envelope title by ID",
+                "description": "",
+                "operationId": "update-title-envelope",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "$ref": "#/components/schemas/Title"
+                                    }
+                                },
+                                "required": [
+                                    "title"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Envelopes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Got the envelope successfully updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Envelope"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request because of invalid data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Envelope not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/envelopes/{id}/budget": {
+            "post": {
+                "summary": "Update an envelope budget by id reduce the budget according to the spent amount",
+                "description": "",
+                "operationId": "update-envelope-budget",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "$ref": "#/components/schemas/Amount"
+                                    }
+                                },
+                                "required": [
+                                    "amount"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Envelopes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Got the envelope successfully updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Envelope"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request because of invalid data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Envelope not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/envelopes/transfer/{fromId}/{toId}": {
+            "post": {
+                "summary": "Transfer an envelope budget to another envelope",
+                "description": "",
+                "operationId": "transfert-envelope-budget",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/fromId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/toId"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "$ref": "#/components/schemas/Amount"
+                                    }
+                                },
+                                "required": [
+                                    "amount"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Envelopes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Got the amount and envelopes successfully updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "amount": {
+                                            "$ref": "#/components/schemas/Amount"
+                                        },
+                                        "fromEnvelope": {
+                                            "$ref": "#/components/schemas/Envelope"
+                                        },
+                                        "toEnvelope": {
+                                            "$ref": "#/components/schemas/Envelope"
+                                        }
+                                    },
+                                    "required": [
+                                        "amount",
+                                        "fromEnvelope",
+                                        "toEnvelope"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request because of invalid data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Envelope not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Envelopes"
+        }
+    ],
+    "components": {
+        "schemas": {
+            "Envelope": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "The unique identifier for the envelope"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "The title of the envelope"
+                    },
+                    "budget": {
+                        "type": "integer",
+                        "description": "The budget amount for the envelope"
+                    },
+                    "spent": {
+                        "type": "integer",
+                        "description": "The amount spent from the envelope"
+                    },
+                    "remaining": {
+                        "type": "integer",
+                        "description": "The remaining budget in the envelope"
+                    }
+                },
+                "required": [
+                    "id",
+                    "title",
+                    "budget",
+                    "spent",
+                    "remaining"
+                ]
+            },
+            "Title": {
+                "type": "string",
+                "description": "The title of the envelope"
+            },
+            "Amount": {
+                "type": "integer",
+                "description": "The amount to be transferred"
+            },
+            "ResponseError":{
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "Error message"
+                    },
+                    "error": {
+                        "type": "string",
+                        "description": "Error details"
+                    }
+                },
+                "required": [
+                    "message",
+                    "error"
+                ]
+            }
+        },
+        "parameters": {
+            "id": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "description": "The unique identifier for the envelope",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "fromId": {
+                "name": "fromId",
+                "in": "path",
+                "required": true,
+                "description": "The unique identifier for the envelope to transfer from",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "toId": {
+                "name": "toId",
+                "in": "path",
+                "required": true,
+                "description": "The unique identifier for the envelope to transfer to",
+                "schema": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

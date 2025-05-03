@@ -3,7 +3,7 @@ import express from 'express';
 const router = express.Router();
 
 // Import the validator middleware
-import validator from '../../middlewares/validator.js';
+import validator from '../../middlewares/inputsValidator.js';
 
 // Import the schema for envelope validation
 import * as schemas from './schemas.js';

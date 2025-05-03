@@ -11,13 +11,13 @@ export const addEnvelope = {
                     type: 'string',
                     minLength: 1,
                 },
-                budget: {
+                amount: {
                     type: 'number',
                     minimum: 0,
                 },
             },
-            required: ['title', 'budget'],
-            additionalProperties: false,
+            required: ['title', 'amount'],
+            additionalProperties: false
         }
     },
     required: ['body'],
@@ -116,12 +116,12 @@ export const updateEnvelopeBudget = {
         body: {
             type: 'object',
             properties: {
-                expense: {
+                amount: {
                     type: 'number',
                     minimum: 1,
                 },
             },
-            required: ['expense'],
+            required: ['amount'],
             additionalProperties: false,
         }
     },

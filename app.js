@@ -3,8 +3,10 @@ import express from 'express';
 const app = express();
 
 // Launch the database
-import { launchDB } from './database/dbHandlers.js';
+/*
+import { launchDB } from './db.js';
 await launchDB();
+*/
 
 // Import morgan module for logging HTTP requests and responses and use it for all routes
 import morgan from 'morgan';
@@ -16,15 +18,22 @@ app.use(cors());
 
 // Import helmet module and use it for all routes
 import helmet from 'helmet';
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: false
+}));
 
 // Parse JSON data and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Import swagger UI and set up the documentation
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './openapi.json' assert { type: 'json' };
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 // Import routes and use them as middleware
 import indexRouter from './routes/index.js';
-app.use('/', indexRouter);
+app.use('/api', indexRouter);
 
 // Import error handler module and use it for all routes
 import errorHandler from 'errorhandler';

@@ -2,7 +2,7 @@
 import Ajv from 'ajv';
 
 // Create an instance of Ajv
-const ajv = new Ajv({ allErrors: true, coerceTypes: true });
+const ajv = new Ajv({ allErrors: false, coerceTypes: true });
 
 // Define the middleware function
 const validator = (schema) => {
@@ -30,7 +30,7 @@ const validator = (schema) => {
     if (!valid) {
       return res.status(400).json({
         message: 'Invalid request data',
-        errors: validate.errors,
+        error: validate.errors,
       });
     }
     // If validation succeeds, call the next middleware function
