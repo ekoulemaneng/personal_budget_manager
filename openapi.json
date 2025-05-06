@@ -20,7 +20,7 @@
         }
     ],
     "paths": {
-        "/envelopes/": {
+        "/envelopes": {
             "post": {
                 "summary": "Add a new envelope",
                 "description": "",
@@ -290,7 +290,7 @@
         },
         "/envelopes/{id}/budget": {
             "post": {
-                "summary": "Update an envelope budget by id reduce the budget according to the spent amount",
+                "summary": "Update an envelope budget by id",
                 "description": "",
                 "operationId": "update-envelope-budget",
                 "parameters": [
@@ -456,11 +456,426 @@
                     }
                 }
             }
+        },
+        "/transactions": {
+            "post": {
+                "summary": "Add a new transaction",
+                "description": "",
+                "operationId": "add-transaction",
+                "tags": [
+                    "Transactions"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "envelopeId": {
+                                        "$ref": "#/components/schemas/EnvelopeId"
+                                    },
+                                    "amount": {
+                                        "$ref": "#/components/schemas/Amount"
+                                    },
+                                    "recipient": {
+                                        "$ref": "#/components/schemas/Recipient"
+                                    }
+                                },
+                                "required": [
+                                    "envelopeId",
+                                    "amount",
+                                    "date"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Got the transaction successfully added",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Transaction"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request because of invalid data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get":{
+                "summary":"Get all transactions",
+                "description":"",
+                "operationId": "get-transactions",
+                "tags": [
+                    "Transactions"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Got the transactions successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Transaction"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/transactions/{id}": {
+            "get": {
+                "summary": "Retrieve a transaction by ID",
+                "description": "",
+                "operationId": "get-transaction",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "tags": [
+                    "Transactions"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Got the transaction successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Transaction"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Transaction not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a transaction by ID",
+                "description": "",
+                "operationId": "delete-transaction",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "tags": [
+                    "Transactions"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Got the transaction successfully deleted",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "Transaction not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/transactions/{id}/envelope": {
+            "post":{
+                "summary": "Update the envelope of a transaction",
+                "description": "",
+                "operationId": "update-transaction-envelope",
+                "tags": [
+                    "Transactions"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "envelopeId": {
+                                        "$ref": "#/components/schemas/EnvelopeId"
+                                    }
+                                },
+                                "required": [
+                                    "envelopeId"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Got the transaction successfully updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Transaction"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request because of invalid data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Transaction not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/transactions/{id}/amount": {
+            "post": {
+                "summary": "Update the amount of a transaction",
+                "description": "",
+                "operationId": "update-transaction-amount",
+                "tags": [
+                    "Transactions"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "$ref": "#/components/schemas/Amount"
+                                    }
+                                },
+                                "required": [
+                                    "amount"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Got the transaction amount successfully updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Transaction"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request because of invalid data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Transaction not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/transactions/{id}/recipient": {
+            "post": {
+                "summary": "Update the recipient of a transaction",
+                "description": "",
+                "operationId": "update-transaction-recipient",
+                "tags": [
+                    "Transactions"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "recipient": {
+                                        "$ref": "#/components/schemas/Recipient"
+                                    }
+                                },
+                                "required": [
+                                    "recipient"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Got the transaction recipient successfully updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Transaction"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request because of invalid data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Transaction not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "tags": [
         {
             "name": "Envelopes"
+        },
+        {
+            "name": "Transactions"
         }
     ],
     "components": {
@@ -497,13 +912,53 @@
                     "remaining"
                 ]
             },
+            "Transaction": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "The unique identifier for the transaction"
+                    },
+                    "envelopeId": {
+                        "type": "integer",
+                        "description": "The unique identifier for the envelope associated with the transaction"
+                    },
+                    "amount": {
+                        "type": "integer",
+                        "description": "The amount of the transaction"
+                    },
+                    "recipient": {
+                        "type": "string",
+                        "description": "The recipient of the transaction"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "The date of the transaction"
+                    }
+                },
+                "required": [
+                    "id",
+                    "envelopeId",
+                    "amount",
+                    "date"
+                ]
+            },
             "Title": {
                 "type": "string",
                 "description": "The title of the envelope"
             },
             "Amount": {
                 "type": "integer",
-                "description": "The amount to be transferred"
+                "description": "The amount of budget/transfert/transaction"
+            },
+            "EnvelopeId": {
+                "type": "integer",
+                "description": "The unique identifier for the envelope"
+            },
+            "Recipient": {
+                "type": "string",
+                "description": "The recipient of the transaction"
             },
             "ResponseError":{
                 "type": "object",
@@ -528,7 +983,7 @@
                 "name": "id",
                 "in": "path",
                 "required": true,
-                "description": "The unique identifier for the envelope",
+                "description": "The unique identifier for the envelope/transaction",
                 "schema": {
                     "type": "integer"
                 }

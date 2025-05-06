@@ -30,16 +30,7 @@ export const getAllEnvelopes = {
     properties: {
         query: {
             type: 'object',
-            properties: {
-                page: {
-                    type: 'number',
-                    minimum: 1,
-                },
-                limit: {
-                    type: 'number',
-                    minimum: 1,
-                },
-            },
+            properties: {},
             additionalProperties: false,
         }
     },

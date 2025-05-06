@@ -2,8 +2,8 @@
 import { createServer } from 'node:http';
 // Import express app
 import app from './app.js';
-// Set the port
-const PORT = 3000;
+// Import the port number
+import { PORT } from './config.js';
 
 // Create a http server with the express app
 const server = createServer(app);

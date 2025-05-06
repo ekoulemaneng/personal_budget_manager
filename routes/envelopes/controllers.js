@@ -1,6 +1,7 @@
-// Import db handlers
-import * as db from '../../db.js';
-import routeErrorsHandler from '../../utils/routeErrorsHandler.js';
+// Import httpErrorHandler function
+import { httpErrorHandler } from '../../utils/errorsHandlers.js';
+// Import the db handlers
+import * as db from './models.js';
 
 // Add a new envelope
 export const addEnvelope = async (req, res) => {
@@ -10,7 +11,8 @@ export const addEnvelope = async (req, res) => {
         const envelope = await db.addEnvelope(title.trim(), amount);
         res.status(201).json(envelope);
     } catch (error) {
-        routeErrorsHandler(res, error);
+        // Handle http failure responses
+        httpErrorHandler(res, error);
     }
 }
 
@@ -20,7 +22,8 @@ export const getAllEnvelopes = async (req, res) => {
         const envelopes = await db.getAllEnvelopes();
         res.status(200).json(envelopes);
     } catch (error) {
-        routeErrorsHandler(res, error);
+        // Handle http failure responses
+        httpErrorHandler(res, error);
     }
 }
 
@@ -33,7 +36,8 @@ export const checkEnvelopeById = async (req, res, next, id) => {
         // Call the next middleware function
         next();
     } catch (error) {
-        routeErrorsHandler(res, error);
+        // Handle http failure responses
+        httpErrorHandler(res, error);
     }
 }
 
@@ -43,7 +47,8 @@ export const getEnvelopeById = async (req, res) => {
         const envelope = req.envelope;
         res.status(200).json(envelope);
     } catch (error) {
-        routeErrorsHandler(res, error);
+        // Handle http failure responses
+        httpErrorHandler(res, error);
     }
 }
 
@@ -56,11 +61,12 @@ export const updateEnvelopeTitle = async (req, res) => {
         const envelope = await db.updateEnvelopeTitle(id, title.trim());
         res.status(200).json(envelope);
     } catch (error) {
-        routeErrorsHandler(res, error);
+        // Handle http failure responses
+        httpErrorHandler(res, error);
     }
 }
 
-// Update an envelope budget by id reduce the budget according to the spent amount
+// Update an envelope budget by id
 export const updateEnvelopeBudget = async (req, res) => {
     try {
         const { id } = req.params;
@@ -69,7 +75,8 @@ export const updateEnvelopeBudget = async (req, res) => {
         const response = await db.updateEnvelopeBudget(id, amount);
         res.status(200).json(response);
     } catch (error) {
-        routeErrorsHandler(res, error);
+        // Handle http failure responses
+        httpErrorHandler(res, error);
     }
 }
 
@@ -82,7 +89,8 @@ export const transferEnvelopeBudget = async (req, res) => {
         const response = await db.transferEnvelopeBudget(fromId, toId, amount);
         res.status(200).json(response);
     } catch (error) {
-        routeErrorsHandler(res, error);
+        // Handle http failure responses
+        httpErrorHandler(res, error);
     }
 }
 
@@ -94,6 +102,7 @@ export const deleteEnvelope = async (req, res) => {
         await db.deleteEnvelope(id);
         res.status(204).send();
     } catch (error) {
-        routeErrorsHandler(res, error);
+        // Handle http failure responses
+        httpErrorHandler(res, error);
     }
 }

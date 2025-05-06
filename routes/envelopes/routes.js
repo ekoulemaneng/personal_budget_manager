@@ -32,7 +32,7 @@ router.get('/:id', validator(schemas.getEnvelopeById), controllers.getEnvelopeBy
 // Update an envelope title by ID
 router.post('/:id/title', validator(schemas.updateEnvelopeTitle), controllers.updateEnvelopeTitle);
 
-// Update an envelope budget by id reduce the budget according to the spent amount
+// Update an envelope budget by id
 router.post('/:id/budget', validator(schemas.updateEnvelopeBudget), controllers.updateEnvelopeBudget);
 
 // Transfer an envelope budget to another envelope

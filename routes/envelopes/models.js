@@ -1,12 +1,7 @@
- // Import Client from 'pg';
-import { title } from 'errorhandler';
-import { text } from 'express';
-import { Pool } from 'pg';
-
-// Create a new Pool instance
-const pool = new Pool({
-    connectionString: process.env.DB_URL
-});
+// Import the pool instance
+import { pool } from '../../config.js'
+// Import the dbErrorHandler function
+import { dbErrorHandler } from '../../utils/errorsHandlers.js';
 
 // Add an envelope to the database
 export const addEnvelope = async (title, budget) => {
@@ -20,24 +15,8 @@ export const addEnvelope = async (title, budget) => {
         });
         return result.rows[0];
     } catch (error) {
-        if (error.code === '23505') {
-            // Handle unique constraint violation
-            throw new Error(JSON.stringify({ 
-                status: 409, 
-                payload: {
-                    message: 'Envelope title already exists',
-                    error: error.message
-                } 
-            }));
-        }
-        // Handle other errors
-        throw new Error(JSON.stringify({ 
-            status: 500, 
-            payload: {
-                message: 'Internal server error',
-                error: error.message
-            } 
-        }));
+        // Handle errors
+        dbErrorHandler(error);
     }
 }
 
@@ -46,19 +25,13 @@ export const getAllEnvelopes = async () => {
     try {
         // Retrieve all envelopes from the database
         const result = await pool.query({
-            title: 'get-all-envelopes', 
+            title: 'get-envelopes', 
             text: 'SELECT * FROM envelopes;'
         });
         return result.rows;
     } catch (error) {
         // Handle errors
-        throw new Error(JSON.stringify({ 
-            status: 500, 
-            payload: {
-                message: 'Internal server error',
-                error: error.message
-            } 
-        }));
+        dbErrorHandler(error);
     }
 }
 
@@ -84,7 +57,7 @@ export const getEnvelopeById = async (id) => {
         // If envelope exists, return the envelope
         return result.rows[0];
     } catch (error) {
-        throw new Error(error.message);
+        dbErrorHandler(error);
     }
 }
 
@@ -99,56 +72,23 @@ export const updateEnvelopeTitle = async (id, title) => {
         });
         return result.rows[0];
     } catch (error) {
-        if (error.code === '23505') {
-            // Handle unique constraint violation
-            throw new Error(JSON.stringify({ 
-                status: 409, 
-                payload: {
-                    message: 'Envelope title already exists',
-                    error: error.message
-                } 
-            }));
-        }
-        // Handle other errors
-        throw new Error(JSON.stringify({ 
-            status: 500, 
-            payload: {
-                message: 'Internal server error',
-                error: error.message
-            } 
-        }));
+        // Handle errors
+        dbErrorHandler(error);
     }
 }
 
-// Update an envelope budget by id reduce the budget according to the spent amount
+// Update an envelope budget by id
 export const updateEnvelopeBudget = async (id, amount) => {
     try {
         // Update the envelope budget in the database
         const result = await pool.query({
             title: 'update-envelope-budget', 
-            text: 'UPDATE envelopes SET spent = spent + $1, remaining = remaining - $1 WHERE id = $2 RETURNING *;', 
+            text: 'UPDATE envelopes SET budget = $1, remaining = $1 WHERE id = $2 RETURNING *;', 
             values: [amount, id]});
         return result.rows[0];
     } catch (error) {
-        console.error('Error updating envelope budget:', error.code);
-        if (error.code === '23514') {
-            // Handle check constraint violation
-            throw new Error(JSON.stringify({ 
-                status: 400, 
-                payload: {
-                    message: 'Expense exceeds remaining budget',
-                    error: error.message
-                } 
-            }));
-        }
-        // Handle other errors
-        throw new Error(JSON.stringify({ 
-            status: 500, 
-            payload: {
-                message: 'Internal server error',
-                error: error.message
-            } 
-        }));
+        // Handle errors
+        dbErrorHandler(error);
     }
 }
 
@@ -181,27 +121,10 @@ export const transferEnvelopeBudget = async (fromId, toId, amount) => {
         // Return the result
         return { amount, source: sourceResult.rows[0], target: targetResult.rows[0] };
     } catch (error) {
-        // Cancel the transaction in case of error
+        // Rollback the transaction
         await client.query('ROLLBACK');
-        // Handle specific error codes
-        if (error.code === '23514') {
-            // Handle check constraint violation
-            throw new Error(JSON.stringify({ 
-                status: 400, 
-                payload: {
-                    message: 'Transfer exceeds remaining budget',
-                    error: error.message
-                } 
-            }));
-        }
-        // Handle other errors
-        throw new Error(JSON.stringify({ 
-            status: 500, 
-            payload: {
-                message: 'Internal server error',
-                error: error.message
-            } 
-        }));
+        // Handle errors
+        dbErrorHandler(error);
     } finally {
         // Release the client
         await client.release();
@@ -214,18 +137,12 @@ export const deleteEnvelope = async (id) => {
         // Delete the envelope from the database
         const result = await pool.query({
             title: 'delete-envelope', 
-            text: 'DELETE FROM envelopes WHERE id = $1;', 
+            text: 'DELETE FROM envelopes WHERE id = $1 RETURNING *;', 
             values: [id]
         });
         return result.rowCount > 0;
     } catch (error) {
         // Handle errors
-        throw new Error(JSON.stringify({ 
-            status: 500, 
-            payload: {
-                message: 'Internal server error',
-                error: error.message
-            } 
-        }));
+        dbErrorHandler(error);
     }
 }
